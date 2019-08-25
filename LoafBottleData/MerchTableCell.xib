@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MerchTableCell" customModule="LoafBottleData" customModuleProvider="target"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="64" id="KGk-i7-Jjw" customClass="MerchTableCell" customModule="LoafBottleData" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
@@ -33,7 +33,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="nameLabel" destination="xlM-Pf-4Cm" id="YEP-F1-mR7"/>
+                <outlet property="nameLabel" destination="xlM-Pf-4Cm" id="xnS-VN-sCi"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="159.375"/>
         </tableViewCell>

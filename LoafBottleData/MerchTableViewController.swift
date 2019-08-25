@@ -3,6 +3,9 @@ import CoreData
 
 final class MerchTableViewController : UITableViewController, TableViewDataSourceDelegate {
 
+    typealias Cell = MerchTableCell
+    typealias Object = Cell.Object
+
     let managedObjectContext: NSManagedObjectContext
     private var tableDataSource: TableDataSource<MerchTableViewController>!
 
@@ -26,10 +29,8 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
         fetchRequest.returnsObjectsAsFaults = false
         let controller = MerchFetchController(batchSize: 20, context: self.managedObjectContext)
         self.tableDataSource = TableDataSource(table: self.tableView, resultsController: controller, delegate: self)
-    }
-
-    func configureCell(_ cell: MerchTableCell, for object: Merch) {
-
+        let resultsController = MerchFetchController(batchSize: 20, context: self.managedObjectContext)
+        self.tableDataSource = TableDataSource(table: self.tableView, resultsController: resultsController, delegate: self)
     }
 }
 

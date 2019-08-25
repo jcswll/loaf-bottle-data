@@ -1,13 +1,13 @@
 import UIKit
 
-final class MerchTableCell : UITableViewCell, TableCell {
+final class MerchTableCell : UITableViewCell, ManagedObjectTableCell {
     static let identifier: Identifier<MerchTableCell> = "MerchTableCell"
 
     @IBOutlet var nameLabel: UILabel!
 
-    var merch: Merch? = nil {
+    var object: Merch? = nil {
         didSet {
-            if let merch = self.merch {
+            if let merch = self.object {
                 self.configure(using: merch)
             }
         }
