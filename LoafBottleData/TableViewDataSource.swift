@@ -52,6 +52,10 @@ class TableDataSource<Delegate : TableViewDataSourceDelegate> : NSObject, UITabl
         self.tableView.reloadData()
     }
 
+    func object(at indexPath: IndexPath) -> Object {
+        return self.resultsController.object(at: indexPath)
+    }
+
     func numberOfSections(in _: UITableView) -> Int {
         guard let sections = self.resultsController.sections else {
             fatalError("Fetch succeeded but no section data")
@@ -74,6 +78,40 @@ class TableDataSource<Delegate : TableViewDataSourceDelegate> : NSObject, UITabl
         self.delegate?.configureCell(cell, for: object)
         return cell
     }
+
+    func tableView(_: UITableView, canEditRowAt _: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        let object = self.resultsController.object(at: indexPath)
+        object.delete()
+    }
+
+    //MARK:- NSFetchedResultsControllerDelegate
+
+    func controllerWillChangeContent(_: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.beginUpdates()
+    }
+
+    func controller(_: NSFetchedResultsController<NSFetchRequestResult>,
+                    didChange object: Any,
+                    at indexPath: IndexPath?,
+                    for type: NSFetchedResultsChangeType,
+                    newIndexPath: IndexPath?)
+    {
+        guard object is Object else { fatalError("Wrong object type in change") }
+        guard let change = FetchedResultsChange(type, oldIndexPath: indexPath, newIndexPath: newIndexPath) else {
+            fatalError("Missing required index path(s) for change of type '\(type)'")
+        }
+
+        self.tableView.performChange(change)
+    }
+
+    func controllerDidChangeContent(_: NSFetchedResultsController<NSFetchRequestResult>) {
+        self.tableView.endUpdates()
+    }
 }
 
 private extension UITableView {
@@ -87,5 +125,46 @@ private extension UITableView {
             fatalError("Could not dequeue cell of correct type '\(kind)'")
         }
         return cell
+    }
+
+    func performChange(_ change: FetchedResultsChange) {
+        switch change {
+            case let .delete(from: indexPath):
+                self.deleteRows(at: [indexPath], with: .automatic)
+            case let .insert(at: indexPath):
+                self.insertRows(at: [indexPath], with: .automatic)
+            case let .move(from: oldIndexPath, to: newIndexPath):
+                self.moveRow(at: oldIndexPath, to: newIndexPath)
+            case let .update(at: indexPath):
+                self.reloadRows(at: [indexPath], with: .automatic)
+        }
+    }
+}
+
+private enum FetchedResultsChange {
+    case delete(from: IndexPath)
+    case insert(at: IndexPath)
+    case move(from: IndexPath, to: IndexPath)
+    case update(at: IndexPath)
+}
+
+private extension FetchedResultsChange {
+    init?(_ type: NSFetchedResultsChangeType, oldIndexPath: IndexPath?, newIndexPath: IndexPath?) {
+        switch type {
+            case .delete:
+                guard let indexPath = oldIndexPath else { return nil }
+                self = .delete(from: indexPath)
+            case .insert:
+                guard let indexPath = newIndexPath else { return nil }
+                self = .insert(at: indexPath)
+            case .move:
+                guard let oldIndexPath = oldIndexPath, let newIndexPath = newIndexPath else { return nil }
+                self = .move(from: oldIndexPath, to: newIndexPath)
+            case .update:
+                guard let indexPath = oldIndexPath else { return nil }
+                self = .update(at: indexPath)
+            @unknown default:
+                return nil
+        }
     }
 }

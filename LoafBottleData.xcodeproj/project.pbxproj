@@ -8,14 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF2230BA98C00E2D96F /* AppDelegate.swift */; };
-		03918DF5230BA98C00E2D96F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF4230BA98C00E2D96F /* ViewController.swift */; };
+		03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF4230BA98C00E2D96F /* StartupViewController.swift */; };
 		03918DF8230BA98C00E2D96F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03918DF6230BA98C00E2D96F /* Main.storyboard */; };
 		03918DFA230BA98E00E2D96F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 03918DF9230BA98E00E2D96F /* Assets.xcassets */; };
 		03918DFD230BA98E00E2D96F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03918DFB230BA98E00E2D96F /* LaunchScreen.storyboard */; };
 		03918E06230BAAFC00E2D96F /* LoafBottleData.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 03918E04230BAAFC00E2D96F /* LoafBottleData.xcdatamodeld */; };
 		03918E08230BACDC00E2D96F /* Merch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918E07230BACDC00E2D96F /* Merch.swift */; };
 		03918E0A230BAD8100E2D96F /* CoreData+LoafBottleStick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918E09230BAD8100E2D96F /* CoreData+LoafBottleStick.swift */; };
-		03918E0C230BB19900E2D96F /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918E0B230BB19900E2D96F /* RootViewController.swift */; };
+		03918E0C230BB19900E2D96F /* RootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918E0B230BB19900E2D96F /* RootCoordinator.swift */; };
 		03918E0E230BB2B000E2D96F /* StoryboardInstantiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918E0D230BB2B000E2D96F /* StoryboardInstantiable.swift */; };
 		039C93D3230CF5AB00B7FFEE /* MerchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039C93D2230CF5AB00B7FFEE /* MerchTableViewController.swift */; };
 		039C93D5230CF66900B7FFEE /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 039C93D4230CF66900B7FFEE /* ManagedObject.swift */; };
@@ -28,7 +28,7 @@
 /* Begin PBXFileReference section */
 		03918DEF230BA98C00E2D96F /* LoafBottleData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoafBottleData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03918DF2230BA98C00E2D96F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		03918DF4230BA98C00E2D96F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		03918DF4230BA98C00E2D96F /* StartupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
 		03918DF7230BA98C00E2D96F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		03918DF9230BA98E00E2D96F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		03918DFC230BA98E00E2D96F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -36,7 +36,7 @@
 		03918E05230BAAFC00E2D96F /* Merch.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Merch.xcdatamodel; sourceTree = "<group>"; };
 		03918E07230BACDC00E2D96F /* Merch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merch.swift; sourceTree = "<group>"; };
 		03918E09230BAD8100E2D96F /* CoreData+LoafBottleStick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CoreData+LoafBottleStick.swift"; sourceTree = "<group>"; };
-		03918E0B230BB19900E2D96F /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		03918E0B230BB19900E2D96F /* RootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootCoordinator.swift; sourceTree = "<group>"; };
 		03918E0D230BB2B000E2D96F /* StoryboardInstantiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryboardInstantiable.swift; sourceTree = "<group>"; };
 		039C93D2230CF5AB00B7FFEE /* MerchTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchTableViewController.swift; sourceTree = "<group>"; };
 		039C93D4230CF66900B7FFEE /* ManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
@@ -78,11 +78,11 @@
 			children = (
 				03918DF2230BA98C00E2D96F /* AppDelegate.swift */,
 				03918E09230BAD8100E2D96F /* CoreData+LoafBottleStick.swift */,
-				03918DF4230BA98C00E2D96F /* ViewController.swift */,
+				03918DF4230BA98C00E2D96F /* StartupViewController.swift */,
 				03918E04230BAAFC00E2D96F /* LoafBottleData.xcdatamodeld */,
 				03918E07230BACDC00E2D96F /* Merch.swift */,
 				03918DF6230BA98C00E2D96F /* Main.storyboard */,
-				03918E0B230BB19900E2D96F /* RootViewController.swift */,
+				03918E0B230BB19900E2D96F /* RootCoordinator.swift */,
 				039C93D2230CF5AB00B7FFEE /* MerchTableViewController.swift */,
 				039C93D6230CFFDD00B7FFEE /* MerchTableCell.swift */,
 				039C93D7230CFFDD00B7FFEE /* MerchTableCell.xib */,
@@ -172,9 +172,9 @@
 				03918E06230BAAFC00E2D96F /* LoafBottleData.xcdatamodeld in Sources */,
 				03918E0E230BB2B000E2D96F /* StoryboardInstantiable.swift in Sources */,
 				03918E08230BACDC00E2D96F /* Merch.swift in Sources */,
-				03918E0C230BB19900E2D96F /* RootViewController.swift in Sources */,
+				03918E0C230BB19900E2D96F /* RootCoordinator.swift in Sources */,
 				039C93DB230CFFFC00B7FFEE /* Identifier.swift in Sources */,
-				03918DF5230BA98C00E2D96F /* ViewController.swift in Sources */,
+				03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */,
 				03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */,
 				039C93D8230CFFDD00B7FFEE /* MerchTableCell.swift in Sources */,
 				03918E0A230BAD8100E2D96F /* CoreData+LoafBottleStick.swift in Sources */,

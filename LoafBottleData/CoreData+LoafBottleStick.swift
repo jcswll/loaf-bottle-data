@@ -15,11 +15,6 @@ extension NSPersistentContainer {
             }
         }
     }
-
-    func deleteAllObjects<O : ManagedObject>(ofType type: O.Type) {
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: O.fetchRequest())
-        try! self.persistentStoreCoordinator.execute(deleteRequest, with: self.viewContext)
-    }
 }
 
 extension NSManagedObjectContext {
@@ -41,5 +36,10 @@ extension NSManagedObjectContext {
             executeChanges()
             _ = self.saveOrRollback()
         }
+    }
+
+    func deleteAllObjects<O : ManagedObject>(ofType type: O.Type) {
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: O.fetchRequest())
+        try! self.persistentStoreCoordinator!.execute(deleteRequest, with: self)
     }
 }

@@ -19,4 +19,14 @@ extension ManagedObject {
         request.sortDescriptors = self.defaultSortDescriptors
         return request
     }
+
+    func delete() {
+        guard let context = self.managedObjectContext else {
+            fatalError("Managed object '\(self)' is not in a context")
+        }
+
+        context.performThenSave {
+            context.delete(self)
+        }
+    }
 }

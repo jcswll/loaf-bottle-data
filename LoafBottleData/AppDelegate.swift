@@ -16,17 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         NSPersistentContainer.withLBSContainer { (container) in
             self.persistentContainer = container
-            let context = container.viewContext
-
-            //!!!: Only for development
-            context.performThenSave {
-                container.deleteAllObjects(ofType: Merch.self)
-                _ = Merch.makeDummies(inContext: context)
-            }
-            ///!!!: /development
-
-            let rootViewController = RootViewController.fromStoryBoard(managedObjectContent: context)
-            self.window?.rootViewController = rootViewController
+            let rootCoordinator = RootCoordinator.fromStoryBoard(managedObjectContent: container.viewContext)
+            self.window?.rootViewController = rootCoordinator
             self.window?.makeKeyAndVisible()
         }
 
