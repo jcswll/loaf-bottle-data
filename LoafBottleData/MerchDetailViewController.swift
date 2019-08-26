@@ -5,27 +5,30 @@ protocol MerchDetailCoordinator : AnyObject {
     func detailDidEndEditing()
 }
 
-class MerchDetailViewController : UIViewController, StoryboardInstantiable {
+class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarButtonItemTarget {
+
     enum Mode {
-        case new(in: NSManagedObjectContext), update(Merch), cancelled
+        case uninitialized, new, update(Merch), cancelled
     }
 
     static let storyboardName: UIStoryboard.Name = "Main"
 
-    static func fromStoryboard(mode: Mode) -> MerchDetailViewController {
+    static func fromStoryboard(mode: Mode, using context: NSManagedObjectContext) -> MerchDetailViewController {
         let controller = self.containingStoryboard.instantiate(MerchDetailViewController.self)
         controller.mode = mode
+        controller.context = context
         return controller
     }
 
-    var flowCoordinator: MerchDetailCoordinator?
-
-    private(set) var mode = Mode.cancelled
+    var coordinator: MerchDetailCoordinator?
 
     @IBOutlet private var nameField: UITextField!
     @IBOutlet private var unitField: UITextField!
     @IBOutlet private var numberOfUsesLabel: UILabel!
     @IBOutlet private var lastUsedLabel: UILabel!
+
+    private var mode: Mode = .uninitialized
+    private var context: NSManagedObjectContext!
 
     private var nameBinding: TextFieldBinding<Merch>?
     private var unitBinding: TextFieldBinding<Merch>?
@@ -33,18 +36,16 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.navigationItem.rightBarButtonItem =
-            UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelTapped))
+        self.navigationItem.rightBarButtonItem = .cancelItem(target: self)
 
         if case let .update(merch) = self.mode {
             self.nameBinding = TextFieldBinding(self.nameField, to: \.name, on: merch)
             self.unitBinding = TextFieldBinding(self.unitField, to: \.unit, on: merch)
             self.numberOfUsesLabel.text = "Number of purchases: \(merch.numberOfUses)"
-            self.lastUsedLabel.text = "Last purchased: \(DateFormatter().string(from: merch.lastUsed))"
+            self.lastUsedLabel.text = "Last purchased: \(DateFormatter.dateString(from: merch.lastUsed))"
         }
-        else if case .new(in: _) = self.mode {
-            self.navigationItem.leftBarButtonItem =
-                UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneTapped))
+        else if case .new = self.mode {
+            self.navigationItem.leftBarButtonItem = .doneItem(target: self)
             self.navigationItem.hidesBackButton = true
         }
     }
@@ -52,30 +53,35 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
-        switch self.mode {
-            case let .new(in: context):
-                context.performAndSave {
-                    self.createMerch(in: context)
-                }
-            case let .update(merch):
-                guard let context = merch.managedObjectContext else { break }
-                _ = context.saveOrRollback()
-            case .cancelled:
-                break
+        self.context.perform {
+            switch self.mode {
+                case .new:
+                    self.createMerch(in: self.context)
+                    fallthrough
+                case .update(_):
+                    let saveDidSucceed = self.context.saveOrRollback()
+                    if !(saveDidSucceed) {
+                        NSLog("Failed to save change")
+                    }
+                case .cancelled:
+                    self.context.rollback()
+                case .uninitialized:
+                    assertionFailure("Mode was not set on creation")
+            }
         }
     }
 
-    @objc private func cancelTapped() {
+    @objc func onCancel() {
         self.mode = .cancelled
         self.endEditing()
     }
 
-    @objc private func doneTapped() {
+    @objc func onDone() {
         self.endEditing()
     }
 
     private func endEditing() {
-        guard let coordinator = self.flowCoordinator else {
+        guard let coordinator = self.coordinator else {
             fatalError("Missing coordination context")
         }
         coordinator.detailDidEndEditing()
@@ -83,48 +89,34 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable {
 
     private func createMerch(in context: NSManagedObjectContext) {
         let name = self.nameField.text!
-        guard !(name.isEmpty) else { return }
-        let unit = self.unitField.text ?? ""
+        let unit = self.unitField.text!
+        guard name.hasElements else { return }
+
         _ = Merch.create(in: context, name: name, unit: unit)
     }
 }
 
-private class TwoWayBinding<View : NSObject, Model : NSObject, Value> {
-    typealias ModelKeyPath = ReferenceWritableKeyPath<Model, Value>
-    typealias ViewKeyPath = ReferenceWritableKeyPath<View, Value>
+private class TextFieldBinding<O : NSObject> : NSObject, UITextFieldDelegate {
+    typealias BoundKeyPath = ReferenceWritableKeyPath<O, String>
 
-    private let viewObservation: NSKeyValueObservation
-    private let modelObservation: NSKeyValueObservation
+    private let observation: NSKeyValueObservation
+    private let model: O
+    private let keyPath: BoundKeyPath
 
-    init(to view: View, via viewKeyPath: ViewKeyPath,
-         on model: Model, at modelKeyPath: ModelKeyPath)
-    {
-        self.modelObservation = model.observe(modelKeyPath) { (_, change) in
+    init(_ textField: UITextField, to keyPath: BoundKeyPath, on object: O) {
+        self.observation = object.observe(keyPath) { (_, change) in
             guard let newValue = change.newValue else { return }
-            view[keyPath: viewKeyPath] = newValue
+            textField.text = newValue
         }
 
-        self.viewObservation = view.observe(viewKeyPath) { (_, change) in
-            guard let newValue = change.newValue else { return }
-            model[keyPath: modelKeyPath] = newValue
-        }
-
-        view[keyPath: viewKeyPath] = model[keyPath: modelKeyPath]
+        self.model = object
+        self.keyPath = keyPath
+        super.init()
+        textField.text = model[keyPath: keyPath]
+        textField.delegate = self
     }
-}
 
-private class TextFieldBinding<Model : NSObject> : TwoWayBinding<UITextField, Model, String>  {
-    typealias BoundKeyPath = ReferenceWritableKeyPath<Model, String>
-
-    init(_ textField: UITextField, to keyPath: BoundKeyPath, on object: Model) {
-        super.init(to: textField, via: \.definitelyText,
-                   on: object, at: keyPath)
-    }
-}
-
-private extension UITextField {
-    var definitelyText: String {
-        get { return self.text! }
-        set { self.text = newValue }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        self.model[keyPath: self.keyPath] = textField.text!
     }
 }

@@ -29,8 +29,7 @@ extension Merch {
     static func makeDummies(inContext context: NSManagedObjectContext) -> [Merch] {
 
         let uses: [Int32] = [3, 2, 1, 6, 5, 4]
-        let intervals: [TimeInterval] = [4, 5, 6, 1, 3, 2]
-        let dates = intervals.map { Date(timeIntervalSince1970: $0) }
+        let dates = uses.map { (_) in Date.random() }
         let info = zip(self.dummyNames, zip(uses, dates))
 
         return info.map {
@@ -55,5 +54,12 @@ extension Merch {
         merch.lastUsed = Date()
 
         return merch
+    }
+}
+
+private extension Date {
+    static func random() -> Date {
+        let interval = TimeInterval.random(in: 0..<(86400 * 365 * 18))
+        return Date(timeIntervalSinceReferenceDate: interval)
     }
 }

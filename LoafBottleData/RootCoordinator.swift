@@ -29,6 +29,7 @@ class RootCoordinator : UIViewController, StoryboardInstantiable {
         tableController.coordinator = self
         self.navigation = UINavigationController(rootViewController: tableController)
         self.navigation.embedWithin(self)
+        self.navigation.delegate = self
     }
 }
 
@@ -43,24 +44,17 @@ extension RootCoordinator : UINavigationControllerDelegate {
 extension RootCoordinator : MerchTableCoordinator {
     func userDidTapAdd() {
         self.state = .creating
-        let controller = MerchDetailViewController.fromStoryboard(mode: .new(in: self.managedObjectContext))
+        let controller = MerchDetailViewController.fromStoryboard(mode: .new, using: self.managedObjectContext)
         let navigation = UINavigationController(rootViewController: controller)
-        controller.flowCoordinator = self
+        controller.coordinator = self
         self.present(navigation, animated: true)
     }
 
     func userDidSelectObject(_ object: Merch) {
-        let alert = UIAlertController.init(
-            title: "No edits for you",
-            message: "Editing functionality isn't implemented just yet.",
-            preferredStyle: .alert
-        )
-
-        let okay = UIAlertAction(title: "Aw, shucks", style: .default)
-
-        alert.addAction(okay)
-
-        self.present(alert, animated: true)
+        self.state = .editing
+        let controller = MerchDetailViewController.fromStoryboard(mode: .update(object), using: self.managedObjectContext)
+        controller.coordinator = self
+        self.navigation.pushViewController(controller, animated: true)
     }
 }
 
@@ -68,6 +62,9 @@ extension RootCoordinator : MerchDetailCoordinator {
     func detailDidEndEditing() {
         if self.state == .creating {
             self.dismiss(animated: true)
+        }
+        else if self.state == .editing {
+            self.navigation.popViewController(animated: true)
         }
 
         self.state = .mainTable
