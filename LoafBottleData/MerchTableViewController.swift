@@ -6,7 +6,7 @@ protocol MerchTableCoordinator : AnyObject {
     func userDidSelectObject(_ object: Merch)
 }
 
-final class MerchTableViewController : UITableViewController, TableViewDataSourceDelegate {
+final class MerchTableViewController : UITableViewController, TableViewDataSourceDelegate, BarButtonItemTarget {
 
     typealias Cell = MerchTableCell
     typealias Object = Cell.Object
@@ -47,12 +47,11 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
     }
 
     private func setUpNavBar() {
-        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addMerch))
-        self.navigationItem.setRightBarButton(addButton, animated: false)
+        self.navigationItem.rightBarButtonItem = .addItem(target: self)
         self.navigationItem.title = "Merch"
     }
 
-    @objc private func addMerch() {
+    @objc func onAdd() {
         guard let coordinator = self.coordinator else {
             assertionFailure("Need coordinator to allow the user to add items")
             return
