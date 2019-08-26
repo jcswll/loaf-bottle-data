@@ -4,8 +4,8 @@ typealias Unit = String
 
 /** A shopping item. */
 final class Merch : NSManagedObject {
-    @NSManaged private(set) var name: String
-    @NSManaged private(set) var unit: Unit
+    @NSManaged var name: String
+    @NSManaged var unit: Unit
     @NSManaged private(set) var numberOfUses: Int32
     @NSManaged private(set) var lastUsed: Date
 }

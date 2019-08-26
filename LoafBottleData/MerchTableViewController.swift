@@ -49,6 +49,7 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
     private func setUpNavBar() {
         let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addMerch))
         self.navigationItem.setRightBarButton(addButton, animated: false)
+        self.navigationItem.title = "Merch"
     }
 
     @objc private func addMerch() {

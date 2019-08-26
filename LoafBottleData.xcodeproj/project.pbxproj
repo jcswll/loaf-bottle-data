@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		033E7C4823134BC900E6363F /* MerchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C4723134BC900E6363F /* MerchDetailViewController.swift */; };
 		03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF2230BA98C00E2D96F /* AppDelegate.swift */; };
 		03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF4230BA98C00E2D96F /* StartupViewController.swift */; };
 		03918DF8230BA98C00E2D96F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03918DF6230BA98C00E2D96F /* Main.storyboard */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		033E7C4723134BC900E6363F /* MerchDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchDetailViewController.swift; sourceTree = "<group>"; };
 		03918DEF230BA98C00E2D96F /* LoafBottleData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoafBottleData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03918DF2230BA98C00E2D96F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		03918DF4230BA98C00E2D96F /* StartupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				039C93D6230CFFDD00B7FFEE /* MerchTableCell.swift */,
 				039C93D7230CFFDD00B7FFEE /* MerchTableCell.xib */,
 				039C93DC230D019200B7FFEE /* TableViewDataSource.swift */,
+				033E7C4723134BC900E6363F /* MerchDetailViewController.swift */,
 				03918E0D230BB2B000E2D96F /* StoryboardInstantiable.swift */,
 				039C93DA230CFFFC00B7FFEE /* Identifier.swift */,
 				039C93D4230CF66900B7FFEE /* ManagedObject.swift */,
@@ -170,6 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				03918E06230BAAFC00E2D96F /* LoafBottleData.xcdatamodeld in Sources */,
+				033E7C4823134BC900E6363F /* MerchDetailViewController.swift in Sources */,
 				03918E0E230BB2B000E2D96F /* StoryboardInstantiable.swift in Sources */,
 				03918E08230BACDC00E2D96F /* Merch.swift in Sources */,
 				03918E0C230BB19900E2D96F /* RootCoordinator.swift in Sources */,

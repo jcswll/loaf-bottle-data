@@ -3,10 +3,16 @@ import CoreData
 
 class RootCoordinator : UIViewController, StoryboardInstantiable {
 
+    private enum State {
+        case mainTable
+        case creating
+        case editing
+    }
+
     static func fromStoryBoard(managedObjectContent: NSManagedObjectContext) -> RootCoordinator {
         let coordinator = self.containingStoryboard.instantiate(RootCoordinator.self)
         coordinator.managedObjectContext = managedObjectContent
-        coordinator.prepareDevelopmentDB()    //!!!: For dev only
+//        coordinator.prepareDevelopmentDB()    //!!!: For dev only
         return coordinator
     }
 
@@ -14,19 +20,33 @@ class RootCoordinator : UIViewController, StoryboardInstantiable {
 
     private(set) var managedObjectContext: NSManagedObjectContext!
 
+    private var navigation: UINavigationController!
+
+    private var state: State = .mainTable
+
     override func viewDidLoad() {
         let tableController = MerchTableViewController(managedObjectContext: self.managedObjectContext)
         tableController.coordinator = self
-        let navigation = UINavigationController(rootViewController: tableController)
-        navigation.embedWithin(self)
+        self.navigation = UINavigationController(rootViewController: tableController)
+        self.navigation.embedWithin(self)
+    }
+}
+
+extension RootCoordinator : UINavigationControllerDelegate {
+    func navigationController(_: UINavigationController, didShow viewController: UIViewController, animated _: Bool) {
+        if viewController is MerchTableViewController {
+            self.state = .mainTable
+        }
     }
 }
 
 extension RootCoordinator : MerchTableCoordinator {
     func userDidTapAdd() {
-        self.managedObjectContext.performThenSave {
-            _ = Merch.create(in: self.managedObjectContext, name: "Beeswax")
-        }
+        self.state = .creating
+        let controller = MerchDetailViewController.fromStoryboard(mode: .new(in: self.managedObjectContext))
+        let navigation = UINavigationController(rootViewController: controller)
+        controller.flowCoordinator = self
+        self.present(navigation, animated: true)
     }
 
     func userDidSelectObject(_ object: Merch) {
@@ -44,10 +64,20 @@ extension RootCoordinator : MerchTableCoordinator {
     }
 }
 
+extension RootCoordinator : MerchDetailCoordinator {
+    func detailDidEndEditing() {
+        if self.state == .creating {
+            self.dismiss(animated: true)
+        }
+
+        self.state = .mainTable
+    }
+}
+
 private extension RootCoordinator {
     func prepareDevelopmentDB() {
         let context = self.managedObjectContext!
-        context.performThenSave {
+        context.performAndSave {
             context.deleteAllObjects(ofType: Merch.self)
             _ = Merch.makeDummies(inContext: context)
         }

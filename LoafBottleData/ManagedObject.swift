@@ -25,7 +25,7 @@ extension ManagedObject {
             fatalError("Managed object '\(self)' is not in a context")
         }
 
-        context.performThenSave {
+        context.performAndSave {
             context.delete(self)
         }
     }

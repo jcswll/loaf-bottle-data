@@ -37,7 +37,72 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D89-vX-mGi" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="164" y="782"/>
+            <point key="canvasLocation" x="742" y="19"/>
+        </scene>
+        <!--Merch Detail View Controller-->
+        <scene sceneID="ccL-WO-TZK">
+            <objects>
+                <viewController storyboardIdentifier="MerchDetailViewController" id="lLz-om-MOT" customClass="MerchDetailViewController" customModule="LoafBottleData" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Okn-nT-1Yh">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="MbM-GZ-q1N">
+                                <rect key="frame" x="57" y="349" width="300" height="208"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2wD-Um-VrJ" userLabel="Name Field">
+                                        <rect key="frame" x="0.0" y="0.0" width="300" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2j1-Bp-LcG" userLabel="Unit Field">
+                                        <rect key="frame" x="0.0" y="46" width="300" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="150" id="3M8-5Y-q4E"/>
+                                            <constraint firstAttribute="width" priority="999" constant="300" id="QdW-dJ-jWp"/>
+                                        </constraints>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kxh-uT-N4X" userLabel="Num Uses Label">
+                                        <rect key="frame" x="0.0" y="92" width="300" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u4Y-gc-1vX" userLabel="Last Used Label">
+                                        <rect key="frame" x="0.0" y="158" width="300" height="50"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="2wD-Um-VrJ" firstAttribute="width" secondItem="2j1-Bp-LcG" secondAttribute="width" id="nU8-bh-cay"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="MbM-GZ-q1N" firstAttribute="centerX" secondItem="4Ih-3u-wEf" secondAttribute="centerX" id="5aw-37-EgC"/>
+                            <constraint firstItem="MbM-GZ-q1N" firstAttribute="centerY" secondItem="4Ih-3u-wEf" secondAttribute="centerY" id="CCo-i6-ecI"/>
+                            <constraint firstItem="MbM-GZ-q1N" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4Ih-3u-wEf" secondAttribute="leading" constant="8" id="NgM-cb-beZ"/>
+                            <constraint firstItem="4Ih-3u-wEf" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MbM-GZ-q1N" secondAttribute="trailing" constant="8" id="UaT-hA-Y1n"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="4Ih-3u-wEf"/>
+                    </view>
+                    <connections>
+                        <outlet property="lastUsedLabel" destination="u4Y-gc-1vX" id="N7g-uT-ybA"/>
+                        <outlet property="nameField" destination="2wD-Um-VrJ" id="h7v-p9-fpy"/>
+                        <outlet property="numberOfUsesLabel" destination="Kxh-uT-N4X" id="hub-W0-zCN"/>
+                        <outlet property="unitField" destination="2j1-Bp-LcG" id="HOT-gU-39p"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="9Sv-nP-Wmd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="742" y="723"/>
         </scene>
     </scenes>
 </document>

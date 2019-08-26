@@ -30,7 +30,7 @@ extension NSManagedObjectContext {
         return true
     }
 
-    func performThenSave(_ executeChanges: @escaping () -> Void) {
+    func performAndSave(_ executeChanges: @escaping () -> Void) {
 
         self.perform {
             executeChanges()
