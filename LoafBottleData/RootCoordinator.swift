@@ -34,8 +34,8 @@ class RootCoordinator : UIViewController, StoryboardInstantiable {
 }
 
 extension RootCoordinator : UINavigationControllerDelegate {
-    func navigationController(_: UINavigationController, didShow viewController: UIViewController, animated _: Bool) {
-        if viewController is MerchTableViewController {
+    func navigationController(_: UINavigationController, willShow viewController: UIViewController, animated _: Bool) {
+        if viewController is MerchTableViewController && self.state != .mainTable {
             self.state = .mainTable
         }
     }
@@ -44,7 +44,7 @@ extension RootCoordinator : UINavigationControllerDelegate {
 extension RootCoordinator : MerchTableCoordinator {
     func userDidTapAdd() {
         self.state = .creating
-        let controller = MerchDetailViewController.fromStoryboard(mode: .new, using: self.managedObjectContext)
+        let controller = MerchDetailViewController.fromStoryboard(mode: .create, using: self.managedObjectContext)
         let navigation = UINavigationController(rootViewController: controller)
         controller.coordinator = self
         self.present(navigation, animated: true)
@@ -60,6 +60,8 @@ extension RootCoordinator : MerchTableCoordinator {
 
 extension RootCoordinator : MerchDetailCoordinator {
     func detailDidEndEditing() {
+        guard self.state != .mainTable else { return }
+
         if self.state == .creating {
             self.dismiss(animated: true)
         }

@@ -8,14 +8,18 @@ protocol MerchDetailCoordinator : AnyObject {
 class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarButtonItemTarget {
 
     enum Mode {
-        case uninitialized, new, update(Merch), cancelled
+        case create, update(Merch)
+    }
+
+    private enum State {
+        case uninitialized, active(Mode), cancelled, finished
     }
 
     static let storyboardName: UIStoryboard.Name = "Main"
 
     static func fromStoryboard(mode: Mode, using context: NSManagedObjectContext) -> MerchDetailViewController {
         let controller = self.containingStoryboard.instantiate(MerchDetailViewController.self)
-        controller.mode = mode
+        controller.state = .active(mode)
         controller.context = context
         return controller
     }
@@ -27,7 +31,7 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
     @IBOutlet private var numberOfUsesLabel: UILabel!
     @IBOutlet private var lastUsedLabel: UILabel!
 
-    private var mode: Mode = .uninitialized
+    private var state: State = .uninitialized
     private var context: NSManagedObjectContext!
 
     private var nameBinding: TextFieldBinding<Merch>?
@@ -35,44 +39,31 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        guard case let .active(mode) = self.state else {
+            fatalError("Must have an activity to perform on being displayed")
+        }
 
         self.navigationItem.rightBarButtonItem = .cancelItem(target: self)
 
-        if case let .update(merch) = self.mode {
+        if case let .update(merch) = mode {
             self.nameBinding = TextFieldBinding(self.nameField, to: \.name, on: merch)
             self.unitBinding = TextFieldBinding(self.unitField, to: \.unit, on: merch)
             self.numberOfUsesLabel.text = "Number of purchases: \(merch.numberOfUses)"
             self.lastUsedLabel.text = "Last purchased: \(DateFormatter.dateString(from: merch.lastUsed))"
         }
-        else if case .new = self.mode {
+        else if case .create = mode {
             self.navigationItem.leftBarButtonItem = .doneItem(target: self)
             self.navigationItem.hidesBackButton = true
         }
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-
-        self.context.perform {
-            switch self.mode {
-                case .new:
-                    self.createMerch(in: self.context)
-                    fallthrough
-                case .update(_):
-                    let saveDidSucceed = self.context.saveOrRollback()
-                    if !(saveDidSucceed) {
-                        NSLog("Failed to save change")
-                    }
-                case .cancelled:
-                    self.context.rollback()
-                case .uninitialized:
-                    assertionFailure("Mode was not set on creation")
-            }
-        }
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.endEditing()
     }
 
     @objc func onCancel() {
-        self.mode = .cancelled
+        self.state = .cancelled
         self.endEditing()
     }
 
@@ -84,7 +75,34 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
         guard let coordinator = self.coordinator else {
             fatalError("Missing coordination context")
         }
+
+        switch self.state {
+            case .uninitialized:
+                fatalError("Never set state before displaying")
+            case let .active(mode):
+                self.finalizeActivity(for: mode)
+            case .cancelled:
+                self.handleCancellation()
+            case .finished:
+                return
+        }
+
         coordinator.detailDidEndEditing()
+    }
+
+    private func finalizeActivity(for mode: Mode) {
+        self.context.perform {
+            if case .create = mode {
+                self.createMerch(in: self.context)
+            }
+
+            let saveDidSucceed = self.context.saveOrRollback()
+            if !(saveDidSucceed) {
+                NSLog("Failed to save change")
+            }
+        }
+
+        self.state = .finished
     }
 
     private func createMerch(in context: NSManagedObjectContext) {
@@ -93,6 +111,14 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
         guard name.hasElements else { return }
 
         _ = Merch.create(in: context, name: name, unit: unit)
+    }
+
+    private func handleCancellation() {
+        self.context.perform {
+            self.context.rollback()
+        }
+
+        self.state = .finished
     }
 }
 
