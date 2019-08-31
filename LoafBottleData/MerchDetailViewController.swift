@@ -46,8 +46,8 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
         self.navigationItem.rightBarButtonItem = .cancelItem(target: self)
 
         if case let .update(merch) = mode {
-            self.nameBinding = TextFieldBinding(self.nameField, to: \.name, on: merch)
-            self.unitBinding = TextFieldBinding(self.unitField, to: \.unit, on: merch)
+            self.nameBinding = TextFieldBinding(self.nameField, to: \.name, on: merch, in: self.context)
+            self.unitBinding = TextFieldBinding(self.unitField, to: \.unit, on: merch, in: self.context)
             self.numberOfUsesLabel.text = "Number of purchases: \(merch.numberOfUses)"
             self.lastUsedLabel.text = "Last purchased: \(DateFormatter.dateString(from: merch.lastUsed))"
         }
@@ -75,6 +75,8 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
         guard let coordinator = self.coordinator else {
             fatalError("Missing coordination context")
         }
+
+        self.view.endEditing(forced: true)
 
         switch self.state {
             case .uninitialized:
@@ -128,8 +130,9 @@ private class TextFieldBinding<O : NSObject> : NSObject, UITextFieldDelegate {
     private let observation: NSKeyValueObservation
     private let model: O
     private let keyPath: BoundKeyPath
+    private let context: NSManagedObjectContext
 
-    init(_ textField: UITextField, to keyPath: BoundKeyPath, on object: O) {
+    init(_ textField: UITextField, to keyPath: BoundKeyPath, on object: O, in context: NSManagedObjectContext) {
         self.observation = object.observe(keyPath) { (_, change) in
             guard let newValue = change.newValue else { return }
             textField.text = newValue
@@ -137,12 +140,21 @@ private class TextFieldBinding<O : NSObject> : NSObject, UITextFieldDelegate {
 
         self.model = object
         self.keyPath = keyPath
+        self.context = context
         super.init()
         textField.text = model[keyPath: keyPath]
         textField.delegate = self
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-        self.model[keyPath: self.keyPath] = textField.text!
+        self.context.perform {
+            self.model[keyPath: self.keyPath] = textField.text!
+        }
+    }
+}
+
+extension UIView {
+    func endEditing(forced: Bool) {
+        _ = self.endEditing(forced)
     }
 }
