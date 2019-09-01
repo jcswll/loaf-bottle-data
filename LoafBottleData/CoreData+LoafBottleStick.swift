@@ -40,6 +40,7 @@ extension NSManagedObjectContext {
 
     func deleteAllObjects<O : ManagedObject>(ofType type: O.Type) {
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: O.fetchRequest())
-        try! self.persistentStoreCoordinator!.execute(deleteRequest, with: self)
+        do { try self.persistentStoreCoordinator!.execute(deleteRequest, with: self) }
+        catch { NSLog("Delete request for '\(O.self)' failed: \(error)") }
     }
 }

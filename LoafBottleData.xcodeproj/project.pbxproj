@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		03009DE3231B40A600948C4D /* ManagedObjectEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03009DE2231B40A600948C4D /* ManagedObjectEditor.swift */; };
+		03009DE5231B453E00948C4D /* FatalErrorReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03009DE4231B453E00948C4D /* FatalErrorReason.swift */; };
 		033E7C4823134BC900E6363F /* MerchDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C4723134BC900E6363F /* MerchDetailViewController.swift */; };
 		033E7C4A2313779000E6363F /* DateFormatter+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C492313779000E6363F /* DateFormatter+Standard.swift */; };
 		033E7C4C23139E8D00E6363F /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C4B23139E8D00E6363F /* Collection+Convenience.swift */; };
@@ -30,6 +32,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		03009DE2231B40A600948C4D /* ManagedObjectEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedObjectEditor.swift; sourceTree = "<group>"; };
+		03009DE4231B453E00948C4D /* FatalErrorReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FatalErrorReason.swift; sourceTree = "<group>"; };
 		033E7C4723134BC900E6363F /* MerchDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchDetailViewController.swift; sourceTree = "<group>"; };
 		033E7C492313779000E6363F /* DateFormatter+Standard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Standard.swift"; sourceTree = "<group>"; };
 		033E7C4B23139E8D00E6363F /* Collection+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Convenience.swift"; sourceTree = "<group>"; };
@@ -99,9 +103,11 @@
 				03918E0D230BB2B000E2D96F /* StoryboardInstantiable.swift */,
 				039C93DA230CFFFC00B7FFEE /* Identifier.swift */,
 				039C93D4230CF66900B7FFEE /* ManagedObject.swift */,
+				03009DE2231B40A600948C4D /* ManagedObjectEditor.swift */,
 				033E7C492313779000E6363F /* DateFormatter+Standard.swift */,
 				033E7C4B23139E8D00E6363F /* Collection+Convenience.swift */,
 				033E7C4D2313A0C000E6363F /* BarButtonItemTarget.swift */,
+				03009DE4231B453E00948C4D /* FatalErrorReason.swift */,
 				03918DF9230BA98E00E2D96F /* Assets.xcassets */,
 				03918DFB230BA98E00E2D96F /* LaunchScreen.storyboard */,
 				03918DFE230BA98E00E2D96F /* Info.plist */,
@@ -189,10 +195,12 @@
 				03918E0C230BB19900E2D96F /* RootCoordinator.swift in Sources */,
 				039C93DB230CFFFC00B7FFEE /* Identifier.swift in Sources */,
 				03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */,
+				03009DE3231B40A600948C4D /* ManagedObjectEditor.swift in Sources */,
 				033E7C4A2313779000E6363F /* DateFormatter+Standard.swift in Sources */,
 				03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */,
 				039C93D8230CFFDD00B7FFEE /* MerchTableCell.swift in Sources */,
 				033E7C4E2313A0C000E6363F /* BarButtonItemTarget.swift in Sources */,
+				03009DE5231B453E00948C4D /* FatalErrorReason.swift in Sources */,
 				03918E0A230BAD8100E2D96F /* CoreData+LoafBottleStick.swift in Sources */,
 				039C93D3230CF5AB00B7FFEE /* MerchTableViewController.swift in Sources */,
 				039C93DD230D019200B7FFEE /* TableViewDataSource.swift in Sources */,

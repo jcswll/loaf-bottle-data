@@ -3,24 +3,22 @@ import CoreData
 
 protocol MerchDetailCoordinator : AnyObject {
     func detailDidEndEditing()
+    func detailSaveDidFail()
 }
 
 class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarButtonItemTarget {
 
-    enum Mode {
-        case create, update(Merch)
-    }
+    typealias Editor = ManagedObjectEditor<Merch>
 
     private enum State {
-        case uninitialized, active(Mode), cancelled, finished
+        case uninitialized, active(Editor), cancelled(Editor), finished
     }
 
     static let storyboardName: UIStoryboard.Name = "Main"
 
-    static func fromStoryboard(mode: Mode, using context: NSManagedObjectContext) -> MerchDetailViewController {
+    static func fromStoryboard(using editor: Editor) -> MerchDetailViewController {
         let controller = self.containingStoryboard.instantiate(MerchDetailViewController.self)
-        controller.state = .active(mode)
-        controller.context = context
+        controller.state = .active(editor)
         return controller
     }
 
@@ -32,28 +30,25 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
     @IBOutlet private var lastUsedLabel: UILabel!
 
     private var state: State = .uninitialized
-    private var context: NSManagedObjectContext!
-
-    private var nameBinding: TextFieldBinding<Merch>?
-    private var unitBinding: TextFieldBinding<Merch>?
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard case let .active(mode) = self.state else {
-            fatalError("Must have an activity to perform on being displayed")
+
+        guard case let .active(editor) = self.state else {
+            fatalError("Must have an editor on being displayed")
         }
 
         self.navigationItem.rightBarButtonItem = .cancelItem(target: self)
 
-        if case let .update(merch) = mode {
-            self.nameBinding = TextFieldBinding(self.nameField, to: \.name, on: merch, in: self.context)
-            self.unitBinding = TextFieldBinding(self.unitField, to: \.unit, on: merch, in: self.context)
-            self.numberOfUsesLabel.text = "Number of purchases: \(merch.numberOfUses)"
-            self.lastUsedLabel.text = "Last purchased: \(DateFormatter.dateString(from: merch.lastUsed))"
-        }
-        else if case .create = mode {
-            self.navigationItem.leftBarButtonItem = .doneItem(target: self)
-            self.navigationItem.hidesBackButton = true
+        switch editor.mode {
+            case let .updating(merch):
+                self.nameField.text = merch.name
+                self.unitField.text = merch.unit
+                self.numberOfUsesLabel.text = "Number of purchases: \(merch.numberOfUses)"
+                self.lastUsedLabel.text = "Last purchased: \(DateFormatter.dateString(from: merch.lastUsed))"
+            case .creating:
+                self.navigationItem.leftBarButtonItem = .doneItem(target: self)
+                self.navigationItem.hidesBackButton = true
         }
     }
 
@@ -63,7 +58,8 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
     }
 
     @objc func onCancel() {
-        self.state = .cancelled
+        guard case let .active(editor) = self.state else { return }
+        self.state = .cancelled(editor)
         self.endEditing()
     }
 
@@ -72,89 +68,37 @@ class MerchDetailViewController : UIViewController, StoryboardInstantiable, BarB
     }
 
     private func endEditing() {
-        guard let coordinator = self.coordinator else {
-            fatalError("Missing coordination context")
-        }
-
-        self.view.endEditing(forced: true)
+        let coordinator = self.coordinator !! "Must have coordination context"
 
         switch self.state {
             case .uninitialized:
                 fatalError("Never set state before displaying")
-            case let .active(mode):
-                self.finalizeActivity(for: mode)
-            case .cancelled:
-                self.handleCancellation()
+            case let .active(editor):
+                self.finalizeEditing(using: editor)
+            case let .cancelled(editor):
+                self.handleCancellation(using: editor)
             case .finished:
                 return
         }
 
+        self.state = .finished
+
         coordinator.detailDidEndEditing()
     }
 
-    private func finalizeActivity(for mode: Mode) {
-        self.context.perform {
-            if case .create = mode {
-                self.createMerch(in: self.context)
-            }
+    private func finalizeEditing(using editor: Editor) {
 
-            let saveDidSucceed = self.context.saveOrRollback()
-            if !(saveDidSucceed) {
-                NSLog("Failed to save change")
-            }
-        }
-
-        self.state = .finished
-    }
-
-    private func createMerch(in context: NSManagedObjectContext) {
         let name = self.nameField.text!
         let unit = self.unitField.text!
         guard name.hasElements else { return }
 
-        _ = Merch.create(in: context, name: name, unit: unit)
-    }
-
-    private func handleCancellation() {
-        self.context.perform {
-            self.context.rollback()
-        }
-
-        self.state = .finished
-    }
-}
-
-private class TextFieldBinding<O : NSObject> : NSObject, UITextFieldDelegate {
-    typealias BoundKeyPath = ReferenceWritableKeyPath<O, String>
-
-    private let observation: NSKeyValueObservation
-    private let model: O
-    private let keyPath: BoundKeyPath
-    private let context: NSManagedObjectContext
-
-    init(_ textField: UITextField, to keyPath: BoundKeyPath, on object: O, in context: NSManagedObjectContext) {
-        self.observation = object.observe(keyPath) { (_, change) in
-            guard let newValue = change.newValue else { return }
-            textField.text = newValue
-        }
-
-        self.model = object
-        self.keyPath = keyPath
-        self.context = context
-        super.init()
-        textField.text = model[keyPath: keyPath]
-        textField.delegate = self
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        self.context.perform {
-            self.model[keyPath: self.keyPath] = textField.text!
+        editor.edit(saving: true) { (merch) in
+            merch.name = name
+            merch.unit = unit
         }
     }
-}
 
-extension UIView {
-    func endEditing(forced: Bool) {
-        _ = self.endEditing(forced)
+    private func handleCancellation(using editor: Editor) {
+        editor.cancel()
     }
 }

@@ -1,8 +1,8 @@
 import UIKit
 import CoreData
 
-extension UIApplicationDelegate {
-    typealias LaunchOptions = [UIApplication.LaunchOptionsKey : Any]
+extension UIApplication {
+    typealias LaunchOptions = [LaunchOptionsKey : Any]
 }
 
 @UIApplicationMain
@@ -12,7 +12,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private var persistentContainer: NSPersistentContainer!
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions options: LaunchOptions?) -> Bool {
+    func application(_: UIApplication, didFinishLaunchingWithOptions _: UIApplication.LaunchOptions?) -> Bool {
 
         NSPersistentContainer.withLBSContainer { (container) in
             self.persistentContainer = container

@@ -8,6 +8,14 @@ final class Merch : NSManagedObject {
     @NSManaged var unit: Unit
     @NSManaged private(set) var numberOfUses: Int32
     @NSManaged private(set) var lastUsed: Date
+
+    convenience init(context: NSManagedObjectContext) {
+        self.init(entity: Merch.entity(), insertInto: context)
+        self.name = ""
+        self.unit = ""
+        self.numberOfUses = 0
+        self.lastUsed = Date()
+    }
 }
 
 extension Merch : ManagedObject {
@@ -42,18 +50,6 @@ extension Merch {
 
             return merch
         }
-    }
-
-    static func create(in context: NSManagedObjectContext, name: String, unit: String = "each") -> Merch {
-
-        let merch = Merch(context: context)
-
-        merch.name = name
-        merch.unit = unit
-        merch.numberOfUses = 0
-        merch.lastUsed = Date()
-
-        return merch
     }
 }
 

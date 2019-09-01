@@ -44,7 +44,8 @@ extension RootCoordinator : UINavigationControllerDelegate {
 extension RootCoordinator : MerchTableCoordinator {
     func userDidTapAdd() {
         self.state = .creating
-        let controller = MerchDetailViewController.fromStoryboard(mode: .create, using: self.managedObjectContext)
+        let editor = ManagedObjectEditor<Merch>(activity: .create(in: self.managedObjectContext))
+        let controller = MerchDetailViewController.fromStoryboard(using: editor)
         let navigation = UINavigationController(rootViewController: controller)
         controller.coordinator = self
         self.present(navigation, animated: true)
@@ -52,7 +53,8 @@ extension RootCoordinator : MerchTableCoordinator {
 
     func userDidSelectObject(_ object: Merch) {
         self.state = .editing
-        let controller = MerchDetailViewController.fromStoryboard(mode: .update(object), using: self.managedObjectContext)
+        let editor = ManagedObjectEditor<Merch>(activity: .update(object))
+        let controller = MerchDetailViewController.fromStoryboard(using: editor)
         controller.coordinator = self
         self.navigation.pushViewController(controller, animated: true)
     }
@@ -71,13 +73,17 @@ extension RootCoordinator : MerchDetailCoordinator {
 
         self.state = .mainTable
     }
+
+    func detailSaveDidFail() {
+        NSLog("Failed to save changes")
+    }
 }
 
 private extension RootCoordinator {
     func prepareDevelopmentDB() {
         let context = self.managedObjectContext!
         context.performAndSave {
-            context.deleteAllObjects(ofType: Merch.self)
+//            context.deleteAllObjects(ofType: Merch.self)
             _ = Merch.makeDummies(inContext: context)
         }
     }

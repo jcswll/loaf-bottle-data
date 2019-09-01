@@ -44,7 +44,7 @@ class TableDataSource<Delegate : TableViewDataSourceDelegate> : NSObject, UITabl
         self.tableView = table
         self.resultsController = resultsController
         self.delegate = delegate
-        table.registerCell(MerchTableCell.self)
+        table.registerCell(Cell.self)
         super.init()
         resultsController.delegate = self
         try! resultsController.performFetch()
