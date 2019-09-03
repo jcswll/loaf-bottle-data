@@ -13,6 +13,7 @@
 		033E7C4A2313779000E6363F /* DateFormatter+Standard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C492313779000E6363F /* DateFormatter+Standard.swift */; };
 		033E7C4C23139E8D00E6363F /* Collection+Convenience.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C4B23139E8D00E6363F /* Collection+Convenience.swift */; };
 		033E7C4E2313A0C000E6363F /* BarButtonItemTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033E7C4D2313A0C000E6363F /* BarButtonItemTarget.swift */; };
+		0357175B231DDF82003488CF /* MerchFetchResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0357175A231DDF82003488CF /* MerchFetchResultsController.swift */; };
 		03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF2230BA98C00E2D96F /* AppDelegate.swift */; };
 		03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03918DF4230BA98C00E2D96F /* StartupViewController.swift */; };
 		03918DF8230BA98C00E2D96F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03918DF6230BA98C00E2D96F /* Main.storyboard */; };
@@ -38,6 +39,7 @@
 		033E7C492313779000E6363F /* DateFormatter+Standard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Standard.swift"; sourceTree = "<group>"; };
 		033E7C4B23139E8D00E6363F /* Collection+Convenience.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+Convenience.swift"; sourceTree = "<group>"; };
 		033E7C4D2313A0C000E6363F /* BarButtonItemTarget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarButtonItemTarget.swift; sourceTree = "<group>"; };
+		0357175A231DDF82003488CF /* MerchFetchResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchFetchResultsController.swift; sourceTree = "<group>"; };
 		03918DEF230BA98C00E2D96F /* LoafBottleData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoafBottleData.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		03918DF2230BA98C00E2D96F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		03918DF4230BA98C00E2D96F /* StartupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartupViewController.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				03918DF6230BA98C00E2D96F /* Main.storyboard */,
 				03918E0B230BB19900E2D96F /* RootCoordinator.swift */,
 				039C93D2230CF5AB00B7FFEE /* MerchTableViewController.swift */,
+				0357175A231DDF82003488CF /* MerchFetchResultsController.swift */,
 				039C93D6230CFFDD00B7FFEE /* MerchTableCell.swift */,
 				039C93D7230CFFDD00B7FFEE /* MerchTableCell.xib */,
 				039C93DC230D019200B7FFEE /* TableViewDataSource.swift */,
@@ -197,6 +200,7 @@
 				03918DF5230BA98C00E2D96F /* StartupViewController.swift in Sources */,
 				03009DE3231B40A600948C4D /* ManagedObjectEditor.swift in Sources */,
 				033E7C4A2313779000E6363F /* DateFormatter+Standard.swift in Sources */,
+				0357175B231DDF82003488CF /* MerchFetchResultsController.swift in Sources */,
 				03918DF3230BA98C00E2D96F /* AppDelegate.swift in Sources */,
 				039C93D8230CFFDD00B7FFEE /* MerchTableCell.swift in Sources */,
 				033E7C4E2313A0C000E6363F /* BarButtonItemTarget.swift in Sources */,

@@ -25,7 +25,9 @@ class RootCoordinator : UIViewController, StoryboardInstantiable {
     private var state: State = .mainTable
 
     override func viewDidLoad() {
-        let tableController = MerchTableViewController(managedObjectContext: self.managedObjectContext)
+        super.viewDidLoad()
+        let resultsController = MerchFetchResultsController(batchSize: 20, context: self.managedObjectContext)
+        let tableController = MerchTableViewController(fetchResultsController: resultsController)
         tableController.coordinator = self
         self.navigation = UINavigationController(rootViewController: tableController)
         self.navigation.embedWithin(self)

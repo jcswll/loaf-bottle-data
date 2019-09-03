@@ -12,11 +12,11 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
     typealias Object = Cell.Object
 
     weak var coordinator: MerchTableCoordinator? = nil
-    let managedObjectContext: NSManagedObjectContext
+    private let fetchResultsController: MerchFetchResultsController
     private var tableDataSource: TableDataSource<MerchTableViewController>!
 
-    init(managedObjectContext: NSManagedObjectContext) {
-        self.managedObjectContext = managedObjectContext
+    init(fetchResultsController: MerchFetchResultsController) {
+        self.fetchResultsController = fetchResultsController
         super.init(style: .plain)
     }
 
@@ -42,8 +42,9 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
     }
 
     private func setUpTableView() {
-        let resultsController = MerchFetchController(batchSize: 20, context: self.managedObjectContext)
-        self.tableDataSource = TableDataSource(table: self.tableView, resultsController: resultsController, delegate: self)
+        self.tableDataSource = TableDataSource(table: self.tableView,
+                                               resultsController: self.fetchResultsController,
+                                               delegate: self)
     }
 
     private func setUpNavBar() {
@@ -58,17 +59,5 @@ final class MerchTableViewController : UITableViewController, TableViewDataSourc
         }
 
         coordinator.userDidTapAdd()
-    }
-}
-
-private final class MerchFetchController : NSFetchedResultsController<Merch> {
-    init(batchSize: Int, context: NSManagedObjectContext) {
-        let request = Merch.sortedFetchRequest
-        request.fetchBatchSize = batchSize
-        request.returnsObjectsAsFaults = false
-        super.init(fetchRequest: request,
-                   managedObjectContext: context,
-                   sectionNameKeyPath: nil,
-                   cacheName: nil)
     }
 }
